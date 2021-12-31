@@ -4,7 +4,7 @@ Private messaging with mongoDB.
 ## Usage
 ```
 npm install
-npm run dev
+nodemon server.js
 
 Go to localhost:3000
 ```
