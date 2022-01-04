@@ -16,7 +16,7 @@ function formatMessage(from, to, text) {
     return {
         from: from.username,
         text,
-        time: date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+        date
     };
 }
 
@@ -26,19 +26,20 @@ function formatBotMessage(username, text) {
     return {
         from: username,
         text,
-        time: date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+        date
     };
 }
 
 async function getMessages(user1, user2){
-    const messages1 = await Message.find({to: user1, from: user2}).limit(50).sort('-date').lean();
-    const messages2 = await Message.find({to: user2, from: user1}).limit(50).sort('-date').lean();
-    const messages = messages1.concat(messages2);
+    // const messages1 = await Message.find({to: user1, from: user2}).limit(50).sort('-date').lean();
+    // const messages2 = await Message.find({to: user2, from: user1}).limit(50).sort('-date').lean();
+    // const messages = messages1.concat(messages2);
     // Sort messages by date
-    messages.sort((a,b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0));
-    messages.map(message => {
-        message.time = new Date(message.date).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
-    });
+    // messages.sort((a,b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0));
+    const messages = await Message.find({ $or: [
+        {to: user1, from: user2}, 
+        {to: user2, from: user1}
+    ] }).limit(100).sort('date').lean();
     return messages;
 }
 
