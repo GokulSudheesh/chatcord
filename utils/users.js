@@ -22,13 +22,7 @@ async function userLeave(id){
 
 // Get active users
 async function getUsers(){
-    let activeUsers = await ActiveUser.find({}).lean();
-    activeUsers = activeUsers.map(user => {
-        delete user._id;
-        delete user.clientId;
-        delete user.__v;
-        return user;
-    });
+    let activeUsers = await ActiveUser.find().select("username").lean();
     return activeUsers;
 }
 
